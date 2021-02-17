@@ -17,8 +17,17 @@ export default function Circle() {
 
   function MainComp(){
     return(
-      "b"
+      <>
+      <p>b</p>
+      <p>{RightMenu()}</p>
+      </>
     )
+
+    function RightMenu(){
+      return(
+        "c"
+      )
+    }
   }
 
   function Footer(){
