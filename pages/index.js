@@ -1,17 +1,19 @@
-import Link from 'next/link'
-import Head from 'next/head'
+import Link from 'next/link';
+import Head from 'next/head';
+import { ChakraProvider } from "@chakra-ui/react";
 
 
 export default function Circle() {
   return (
-    <>
-    {HeadInfo()}
+    <ChakraProvider>
+    
+      <HeadInfo />
 
-    {MainComp()}
+      <MainComp />
 
-    {Footer()}
+      <Footer />
 
-    </>
+    </ChakraProvider>
   )
 
 
