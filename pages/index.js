@@ -1,18 +1,37 @@
 import Link from 'next/link'
+import Head from 'next/head'
 
-export default function Home() {
+
+export default function Circle() {
   return (
-    <ul>
-      <li>
-        <Link href="/b" as="/a">
-          <a>a</a>
-        </Link>
-      </li>
-      <li>
-        <Link href="/a" as="/b">
-          <a>b</a>
-        </Link>
-      </li>
-    </ul>
+    <>
+    {HeadInfo()}
+
+    {MainComp()}
+
+    {Footer()}
+
+    </>
   )
+
+
+  function MainComp(){
+    return(
+      "b"
+    )
+  }
+
+  function Footer(){
+    return(
+      "a"
+    )
+  }
+
+  function HeadInfo() {
+    return(
+      <Head>
+        <title>VRCircleDaysDreams.c</title>
+      </Head>
+    )
+  }
 }
