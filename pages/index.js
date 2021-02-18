@@ -1,9 +1,14 @@
 //import
 import Link from 'next/link';
 import Head from 'next/head';
+import { useState, ChangeEvent,useRef } from "react";
+
 import { ChakraProvider } from "@chakra-ui/react";
 import { Button, ButtonGroup } from "@chakra-ui/react"
-import { useState, ChangeEvent,useRef } from "react";
+import { Grid, GridItem } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
+import { Container } from "@chakra-ui/react"
+
 
 //サンプルデータ　後に削除
 let dbSample = [
@@ -63,15 +68,21 @@ export default function Circle() {
 
     //モード管理　増やすこともできる
     let [mode,setMode] = useState("week");
-    const modeChange = () => {if(mode==="week"){setMode("daily")}if(mode==="daily"){setMode("week")}}
+    const modeChange = (props) => {
+      console.log("modochange")
+      //！　propsを使って曜日指定できるようにする
+      if(mode==="week"){
+        setMode("daily")
+      }
+      if(mode==="daily"){
+        setMode("week")
+      }
+    }
 
     //メイン画面
     if(mode==="week"){
       return(
-        <>
-        <p>{mode}</p>
-        <Button colorScheme="blue" onClick={modeChange}>Button</Button>
-        </>
+        <WeekMainComp />
       );
     }else{
       return(
@@ -81,18 +92,81 @@ export default function Circle() {
         </>
       )
     }
-    
 
-    function RightMenu(){
-    return(
-        "c"
+    //週の時のメインコンポーネントの中身
+    function WeekMainComp(props){
+      return(
+        <>
+        <div class="mainContainer">
+          <p>{mode}</p>
+
+          <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em">
+
+          {/*weekdays*/}
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Mo")}>
+            月
+            <EventBoxInWeek eventInfo={dbSample[0]}/>
+          </Box> 
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Tu")}>
+            火
+            <EventBoxInWeek eventInfo={dbSample[1]}/>
+
+          </Box> 
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("We")}>
+            水
+            <EventBoxInWeek eventInfo={dbSample[6]}/>
+
+          </Box> 
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Th")}>
+            木
+          </Box> 
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Fr")}>
+            金
+          </Box> 
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Sa")}>
+            土
+            <EventBoxInWeek eventInfo={dbSample[2]}/>
+            <EventBoxInWeek eventInfo={dbSample[3]}/>
+            <EventBoxInWeek eventInfo={dbSample[4]}/>
+
+          </Box> 
+          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Su")}>
+            日
+            <EventBoxInWeek eventInfo={dbSample[5]}/>
+
+          </Box> 
+
+        </Grid>
+      </div>
+      </>
+
       )
     }
+
+    //各曜日の中の箱
+    function EventBoxInWeek(props){
+      return(
+        <Box my="1em">
+          event title：<br />
+          {props.eventInfo.title}<br />
+          message：<br />
+          {props.eventInfo.editableMessage}
+        </Box>
+      )
+    }
+    
+    
+    
   }
+
+
+
 
   function Footer(){
     return(
-      "a"
+        <Grid templateColumns="repeat(1, 1fr)" gap={6} mx="3em" textAlign="right">
+          <Box w="100%" h="10" bg="white">V R C i r c l e D a y s D r e a m s . c </Box>
+        </Grid>
     )
   }
 
