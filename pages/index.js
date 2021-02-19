@@ -87,8 +87,8 @@ export default function Circle() {
     }else{
       return(
         <>
-        <p>{mode}</p>
-        <Button colorScheme="red" onClick={modeChange}>Button</Button>
+        <p>{mode}
+        <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button></p>
         </>
       )
     }
@@ -100,7 +100,7 @@ export default function Circle() {
         <div class="mainContainer">
           <p>{mode}</p>
 
-          <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em">
+          <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
 
           {/*weekdays*/}
           <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Mo")}>
@@ -165,7 +165,7 @@ export default function Circle() {
   function Footer(){
     return(
         <Grid templateColumns="repeat(1, 1fr)" gap={6} mx="3em" textAlign="right">
-          <Box w="100%" h="10" bg="white">V R C i r c l e D a y s D r e a m s . c </Box>
+          <Box w="100%" h="7" bg="white" right={30} position="fixed" bottom={0}>V R C i r c l e D a y s D r e a m s . c </Box>
         </Grid>
     )
   }
