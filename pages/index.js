@@ -9,6 +9,14 @@ import { Grid, GridItem } from "@chakra-ui/react"
 import { Box } from "@chakra-ui/react"
 import { Container } from "@chakra-ui/react"
 
+import { ColorModeScript } from "@chakra-ui/react";
+import { extendTheme } from "@chakra-ui/react";
+const colorConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+}
+import { useColorMode,useColorModeValue } from "@chakra-ui/react";
+
 
 //サンプルデータ　後に削除
 let dbSample = [
@@ -55,6 +63,8 @@ export default function Circle() {
 
       <HeadInfo />
 
+      <ColorModeScript initialColorMode={colorConfig.initialColorMode} />
+
       <MainComp />
 
       <Footer />
@@ -79,6 +89,9 @@ export default function Circle() {
       }
     }
 
+    //カラーモード
+    const { colorMode, toggleColorMode } = useColorMode()
+
     //メイン画面
     if(mode==="week"){
       return(
@@ -88,7 +101,8 @@ export default function Circle() {
       return(
         <>
         <p>{mode}
-        <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button></p>
+        <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
+        <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button></p>
         </>
       )
     }
@@ -98,39 +112,42 @@ export default function Circle() {
       return(
         <>
         <div class="mainContainer">
-          <p>{mode}</p>
+          <p>
+            {mode}
+            <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+          </p>
 
           <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
 
           {/*weekdays*/}
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Mo")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Mo")}>
             月
             <EventBoxInWeek eventInfo={dbSample[0]}/>
           </Box> 
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Tu")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Tu")}>
             火
             <EventBoxInWeek eventInfo={dbSample[1]}/>
 
           </Box> 
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("We")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("We")}>
             水
             <EventBoxInWeek eventInfo={dbSample[6]}/>
 
           </Box> 
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Th")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Th")}>
             木
           </Box> 
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Fr")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Fr")}>
             金
           </Box> 
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Sa")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Sa")}>
             土
             <EventBoxInWeek eventInfo={dbSample[2]}/>
             <EventBoxInWeek eventInfo={dbSample[3]}/>
             <EventBoxInWeek eventInfo={dbSample[4]}/>
 
           </Box> 
-          <Box w="100%" bg="white" border="1px" onClick={()=>modeChange("Su")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Su")}>
             日
             <EventBoxInWeek eventInfo={dbSample[5]}/>
 
@@ -163,10 +180,10 @@ export default function Circle() {
 
 
   function Footer(){
+    const bgc = useColorModeValue("white", "black")
     return(
-        <Grid templateColumns="repeat(1, 1fr)" gap={6} mx="3em" textAlign="right">
-          <Box w="100%" h="7" bg="white" right={30} position="fixed" bottom={0}>V R C i r c l e D a y s D r e a m s . c </Box>
-        </Grid>
+        <Box w="100%" h="7" bg={bgc} position="fixed" bottom={0} textAlign="right">V R C i r c l e D a y s D r e a m s . c　　　</Box>
+
     )
   }
 
