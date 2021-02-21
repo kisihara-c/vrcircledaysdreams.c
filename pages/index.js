@@ -46,7 +46,7 @@ export default function Circle() {
     let [dbData,setDbData] = useState("");
     let query = 
       { query: 
-        "query MyQuery { events { title about dotw start end howToJoin other link editableMessage password } }" }
+        "query MyQuery { events(order_by: {start: asc}) { title about dotw start end howToJoin other link editableMessage password } }" }
 
     const fetchJSON = (q=query) => {
       fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
@@ -62,14 +62,16 @@ export default function Circle() {
 
     //モード管理　増やすこともできる
     let [mode,setMode] = useState("week");
-    const modeChange = (props) => {
+    let [dotw,setDotw] = useState("")
+    const modeChange = (d) => {
       console.log("modochange")
       //！　propsを使って曜日指定できるようにする
       if(mode==="week"){
-        setMode("daily")
+        setMode("daily");
       }
       if(mode==="daily"){
-        setMode("week")
+        setMode("week");
+        setDotw(d);
       }
     }
 
@@ -92,17 +94,55 @@ export default function Circle() {
         );
       }else{
         return(
-          <>
-          <p>{mode}
-          <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
-          <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
-          {/*<Button colorScheme="gray" onClick={fetchJSON} size="xs">hasuraTest</Button>*/}
-          </p>
-          </>
+          <DayMainComp />
         )
       }
     }
     
+    function DayMainComp(props){
+      //！　流石に冗長、要リファクタリング
+      let moData = dbData.filter(function(value,index,array){return value.dotw==="月"})
+      let tuData = dbData.filter(function(value,index,array){return value.dotw==="火"})
+      let weData = dbData.filter(function(value,index,array){return value.dotw==="水"})
+      let thData = dbData.filter(function(value,index,array){return value.dotw==="木"})
+      let frData = dbData.filter(function(value,index,array){return value.dotw==="金"})
+      let saData = dbData.filter(function(value,index,array){return value.dotw==="土"})
+      let suData = dbData.filter(function(value,index,array){return value.dotw==="日"})
+      let moBoxes = [];
+      for(let d of moData){moBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+      let tuBoxes = [];
+      for(let d of tuData){tuBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+      let weBoxes = [];
+      for(let d of weData){weBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+      let thBoxes = [];
+      for(let d of thData){thBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+      let frBoxes = [];
+      for(let d of frData){frBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+      let saBoxes = [];
+      for(let d of saData){saBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+      let suBoxes = [];
+      for(let d of suData){suBoxes.push(<EventBoxInDay eventInfo={d}/>)}
+
+      const callingTable = {"月":moBoxes,"火":tuBoxes,"水":weBoxes,"木":thBoxes,"金":frBoxes,"土":saBoxes,"日":suBoxes}
+      
+      return(
+        < >
+        <div class="mainContainer">
+          <p>
+            {mode}
+            <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
+            <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+          </p>
+          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="18em" mb="7">
+            <Box w="100%" border="1px">
+              土
+              {saBoxes}
+          </Box> 
+          </Grid>
+        </div>
+        </>
+        )
+    }
 
     //週の時のメインコンポーネントの中身　配列にした後forof文を使いJSXのままループ
     function WeekMainComp(props){
@@ -178,6 +218,20 @@ export default function Circle() {
 
     //各曜日の中の箱
     function EventBoxInWeek(props){
+      return(
+        <Box my="1em">
+          <Divider marginBottom="0.5em"/>
+
+          {props.eventInfo.start} ～ {props.eventInfo.end}<br />
+          <Text fontSize="0.9em">{props.eventInfo.title}</Text>
+          <Text fontSize="0.6em" textAlign="right">{props.eventInfo.about}</Text>
+          <Text fontSize="0.8em">伝言：<br />{props.eventInfo.editableMessage}</Text>
+
+        </Box>
+      )
+    }
+
+    function EventBoxInDay(props){
       return(
         <Box my="1em">
           <Divider marginBottom="0.5em"/>
