@@ -1,4 +1,5 @@
 //import
+import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useState, ChangeEvent,useRef } from "react";
@@ -16,6 +17,7 @@ const colorConfig = {
   useSystemColorMode: false,
 }
 import { useColorMode,useColorModeValue } from "@chakra-ui/react";
+
 
 
 //サンプルデータ　後に削除
@@ -63,6 +65,21 @@ let dbSample = [
   password: "toheartpass"},
 ]
 
+ //hasuraテスト
+const queryStr = "query MyQuery { events { title } }"
+const query = { query: queryStr }
+
+const fetchJSON = () => {
+    fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
+        method: 'POST',
+        body: JSON.stringify(query)
+      }).then(response => {
+        response.json().then(result => {
+        dbSample=result.data.events;
+        console.log(result.data)
+      })
+    })
+}
 
 export default function Circle() {
   return (
@@ -99,6 +116,7 @@ export default function Circle() {
     //カラーモード
     const { colorMode, toggleColorMode } = useColorMode()
 
+
     //メイン画面
     if(mode==="week"){
       return(
@@ -109,7 +127,8 @@ export default function Circle() {
         <>
         <p>{mode}
         <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
-        <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button></p>
+        <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+        <Button colorScheme="gray" onClick={fetchJSON} size="xs">hasuraTest</Button></p>
         </>
       )
     }
@@ -173,8 +192,6 @@ export default function Circle() {
         <Box my="1em">
           event title：<br />
           {props.eventInfo.title}<br />
-          message：<br />
-          {props.eventInfo.editableMessage}
         </Box>
       )
     }
