@@ -151,6 +151,15 @@ export default function Circle() {
 
     //週の時のメインコンポーネントの中身
     function WeekMainComp(props){
+      let moData = dbData.filter(function(value,index,array){return value.dotw==="月"})
+      let tuData = dbData.filter(function(value,index,array){return value.dotw==="火"})
+      let weData = dbData.filter(function(value,index,array){return value.dotw==="水"})
+      let thData = dbData.filter(function(value,index,array){return value.dotw==="木"})
+      let frData = dbData.filter(function(value,index,array){return value.dotw==="金"})
+      let saData = dbData.filter(function(value,index,array){return value.dotw==="土"})
+      let suData = dbData.filter(function(value,index,array){return value.dotw==="日"})
+
+
       return(
         <>
         <div class="mainContainer">
@@ -162,36 +171,36 @@ export default function Circle() {
           <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
 
           {/*weekdays　本当はここも共通化したらスマートになるが、あえて共通化しない方が可読性が高いと判断*/}
-          <Box w="100%" border="1px" onClick={()=>modeChange("Mo")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("月")} _hover={{ bg: "gray.500" }} >
             月
-            <EventBoxInWeek eventInfo={dbData[0]}/>
+            <EventBoxInWeek eventInfo={moData[0]}/>
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Tu")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("火")} _hover={{ bg: "gray.500" }} >
             火
-            <EventBoxInWeek eventInfo={dbData[1]}/>
+            <EventBoxInWeek eventInfo={tuData[0]}/>
 
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("We")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("水")} _hover={{ bg: "gray.500" }} >
             水
-            <EventBoxInWeek eventInfo={dbData[6]}/>
+            <EventBoxInWeek eventInfo={weData[0]}/>
 
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Th")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("木")} _hover={{ bg: "gray.500" }} >
             木
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Fr")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("金")} _hover={{ bg: "gray.500" }} >
             金
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Sa")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("土")} _hover={{ bg: "gray.500" }} >
             土
-            <EventBoxInWeek eventInfo={dbData[2]}/>
-            <EventBoxInWeek eventInfo={dbData[3]}/>
-            <EventBoxInWeek eventInfo={dbData[4]}/>
+            <EventBoxInWeek eventInfo={saData[0]}/>
+            <EventBoxInWeek eventInfo={saData[1]}/>
+            <EventBoxInWeek eventInfo={saData[2]}/>
 
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("Su")} _hover={{ bg: "gray.500" }} >
             日
-            <EventBoxInWeek eventInfo={dbData[5]}/>
+            <EventBoxInWeek eventInfo={suData[0]}/>
 
           </Box> 
 
