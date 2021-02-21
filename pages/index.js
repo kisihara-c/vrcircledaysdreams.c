@@ -86,10 +86,9 @@ export default function Circle() {
   //メインコンポーネント
   function MainComp(){
 
-    //データ取得（テスト分）
+    //データ取得（全部）
     let [dbData,setDbData] = useState("");
     let query = { query: "query MyQuery { events { title dotw } }" }
-
 
     const fetchJSON = (q=query) => {
       fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
@@ -102,8 +101,6 @@ export default function Circle() {
         })
       })
     }
-
-
 
     //モード管理　増やすこともできる
     let [mode,setMode] = useState("week");
@@ -149,7 +146,7 @@ export default function Circle() {
     }
     
 
-    //週の時のメインコンポーネントの中身
+    //週の時のメインコンポーネントの中身　配列にした後forof文を使いJSXのままループ
     function WeekMainComp(props){
       let moData = dbData.filter(function(value,index,array){return value.dotw==="月"})
       let tuData = dbData.filter(function(value,index,array){return value.dotw==="火"})
@@ -158,6 +155,20 @@ export default function Circle() {
       let frData = dbData.filter(function(value,index,array){return value.dotw==="金"})
       let saData = dbData.filter(function(value,index,array){return value.dotw==="土"})
       let suData = dbData.filter(function(value,index,array){return value.dotw==="日"})
+      let moBoxes = [];
+      for(let d of moData){moBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
+      let tuBoxes = [];
+      for(let d of tuData){tuBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
+      let weBoxes = [];
+      for(let d of weData){weBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
+      let thBoxes = [];
+      for(let d of thData){thBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
+      let frBoxes = [];
+      for(let d of frData){frBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
+      let saBoxes = [];
+      for(let d of saData){saBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
+      let suBoxes = [];
+      for(let d of suData){suBoxes.push(<EventBoxInWeek eventInfo={d}/>)}
 
 
       return(
@@ -170,38 +181,34 @@ export default function Circle() {
 
           <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
 
-          {/*weekdays　本当はここも共通化したらスマートになるが、あえて共通化しない方が可読性が高いと判断*/}
+          {/*weekdays　本当はここも共通化したらスマートになるが、今はまだ共通化しない方が可読性が高いと判断*/}
           <Box w="100%" border="1px" onClick={()=>modeChange("月")} _hover={{ bg: "gray.500" }} >
             月
-            <EventBoxInWeek eventInfo={moData[0]}/>
+            {moBoxes}
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("火")} _hover={{ bg: "gray.500" }} >
             火
-            <EventBoxInWeek eventInfo={tuData[0]}/>
-
+            {tuBoxes}
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("水")} _hover={{ bg: "gray.500" }} >
             水
-            <EventBoxInWeek eventInfo={weData[0]}/>
-
+            {weBoxes}
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("木")} _hover={{ bg: "gray.500" }} >
             木
+            {thBoxes}
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("金")} _hover={{ bg: "gray.500" }} >
             金
+            {frBoxes}
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("土")} _hover={{ bg: "gray.500" }} >
             土
-            <EventBoxInWeek eventInfo={saData[0]}/>
-            <EventBoxInWeek eventInfo={saData[1]}/>
-            <EventBoxInWeek eventInfo={saData[2]}/>
-
+            {saBoxes}
           </Box> 
           <Box w="100%" border="1px" onClick={()=>modeChange("Su")} _hover={{ bg: "gray.500" }} >
             日
-            <EventBoxInWeek eventInfo={suData[0]}/>
-
+            {suBoxes}
           </Box> 
 
         </Grid>
