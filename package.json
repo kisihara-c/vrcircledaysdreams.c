@@ -13,6 +13,7 @@
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "framer-motion": "^3.3.0",
+    "js-yaml-loader": "^1.2.2",
     "next": "latest",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
