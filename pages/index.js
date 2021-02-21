@@ -9,6 +9,7 @@ import { Button, ButtonGroup } from "@chakra-ui/react"
 import { Grid, GridItem } from "@chakra-ui/react"
 import { Box } from "@chakra-ui/react"
 import { Container } from "@chakra-ui/react"
+import { Spinner } from "@chakra-ui/react"
 
 import { ColorModeScript } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
@@ -65,21 +66,6 @@ let dbSample = [
   password: "toheartpass"},
 ]
 
- //hasuraテスト
-const queryStr = "query MyQuery { events { title } }"
-const query = { query: queryStr }
-
-const fetchJSON = () => {
-    fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
-        method: 'POST',
-        body: JSON.stringify(query)
-      }).then(response => {
-        response.json().then(result => {
-        dbSample=result.data.events;
-        console.log(result.data)
-      })
-    })
-}
 
 export default function Circle() {
   return (
@@ -100,6 +86,25 @@ export default function Circle() {
   //メインコンポーネント
   function MainComp(){
 
+    //データ取得（テスト分）
+    let [dbData,setDbData] = useState("");
+    let query = { query: "query MyQuery { events { title dotw } }" }
+
+
+    const fetchJSON = (q=query) => {
+      fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
+        method: 'POST',
+        body: JSON.stringify(q)
+      }).then(response => {
+        response.json().then(result => {
+          setDbData(result.data.events);
+          console.log(result.data)
+        })
+      })
+    }
+
+
+
     //モード管理　増やすこともできる
     let [mode,setMode] = useState("week");
     const modeChange = (props) => {
@@ -118,20 +123,31 @@ export default function Circle() {
 
 
     //メイン画面
-    if(mode==="week"){
-      return(
-        <WeekMainComp />
-      );
+    //データがない時はスピナー、その後各モードの判定・表示
+    if(!dbData){
+      fetchJSON();
+      return(<Spinner color="gray.500" />);
     }else{
-      return(
-        <>
-        <p>{mode}
-        <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
-        <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
-        <Button colorScheme="gray" onClick={fetchJSON} size="xs">hasuraTest</Button></p>
-        </>
-      )
+      //各曜日の配列作成
+
+      //各モード判定・表示
+      if(mode==="week"){
+        return(
+          <WeekMainComp />
+        );
+      }else{
+        return(
+          <>
+          <p>{mode}
+          <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
+          <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+          {/*<Button colorScheme="gray" onClick={fetchJSON} size="xs">hasuraTest</Button>*/}
+          </p>
+          </>
+        )
+      }
     }
+    
 
     //週の時のメインコンポーネントの中身
     function WeekMainComp(props){
@@ -145,37 +161,37 @@ export default function Circle() {
 
           <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
 
-          {/*weekdays*/}
-          <Box w="100%" border="1px" onClick={()=>modeChange("Mo")}>
+          {/*weekdays　本当はここも共通化したらスマートになるが、あえて共通化しない方が可読性が高いと判断*/}
+          <Box w="100%" border="1px" onClick={()=>modeChange("Mo")} _hover={{ bg: "gray.500" }} >
             月
-            <EventBoxInWeek eventInfo={dbSample[0]}/>
+            <EventBoxInWeek eventInfo={dbData[0]}/>
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Tu")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Tu")} _hover={{ bg: "gray.500" }} >
             火
-            <EventBoxInWeek eventInfo={dbSample[1]}/>
+            <EventBoxInWeek eventInfo={dbData[1]}/>
 
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("We")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("We")} _hover={{ bg: "gray.500" }} >
             水
-            <EventBoxInWeek eventInfo={dbSample[6]}/>
+            <EventBoxInWeek eventInfo={dbData[6]}/>
 
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Th")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Th")} _hover={{ bg: "gray.500" }} >
             木
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Fr")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Fr")} _hover={{ bg: "gray.500" }} >
             金
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Sa")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Sa")} _hover={{ bg: "gray.500" }} >
             土
-            <EventBoxInWeek eventInfo={dbSample[2]}/>
-            <EventBoxInWeek eventInfo={dbSample[3]}/>
-            <EventBoxInWeek eventInfo={dbSample[4]}/>
+            <EventBoxInWeek eventInfo={dbData[2]}/>
+            <EventBoxInWeek eventInfo={dbData[3]}/>
+            <EventBoxInWeek eventInfo={dbData[4]}/>
 
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Su")}>
+          <Box w="100%" border="1px" onClick={()=>modeChange("Su")} _hover={{ bg: "gray.500" }} >
             日
-            <EventBoxInWeek eventInfo={dbSample[5]}/>
+            <EventBoxInWeek eventInfo={dbData[5]}/>
 
           </Box> 
 
