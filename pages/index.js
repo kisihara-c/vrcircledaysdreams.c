@@ -62,16 +62,17 @@ export default function Circle() {
 
     //モード管理　増やすこともできる
     let [mode,setMode] = useState("week");
-    let [dotw,setDotw] = useState("")
+    let [selectedDotw,setSelectedDotw] = useState("week");
     const modeChange = (d) => {
       console.log("modochange")
       //！　propsを使って曜日指定できるようにする
       if(mode==="week"){
         setMode("daily");
+        console.log(d);
+        setSelectedDotw(d);
       }
       if(mode==="daily"){
         setMode("week");
-        setDotw(d);
       }
     }
 
@@ -100,7 +101,6 @@ export default function Circle() {
     }
     
     function DayMainComp(props){
-      //！　流石に冗長、要リファクタリング
       let moData = dbData.filter(function(value,index,array){return value.dotw==="月"})
       let tuData = dbData.filter(function(value,index,array){return value.dotw==="火"})
       let weData = dbData.filter(function(value,index,array){return value.dotw==="水"})
@@ -123,8 +123,23 @@ export default function Circle() {
       let suBoxes = [];
       for(let d of suData){suBoxes.push(<EventBoxInDay eventInfo={d}/>)}
 
-      const callingTable = {"月":moBoxes,"火":tuBoxes,"水":weBoxes,"木":thBoxes,"金":frBoxes,"土":saBoxes,"日":suBoxes}
-      
+      const callingTable = (d)=>{
+        switch(d){
+          case "月":
+            return moBoxes;
+          case "火":
+            return tuBoxes;
+          case "水":
+            return weBoxes;
+          case "木":
+            return thBoxes;
+          case "土":
+            return saBoxes;
+          case "日":
+            return suBoxes;
+        }
+      }
+
       return(
         < >
         <div class="mainContainer">
@@ -133,10 +148,10 @@ export default function Circle() {
             <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
             <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
           </p>
-          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="18em" mb="7">
+          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="19em" mb="7">
             <Box w="100%" border="1px">
-              土
-              {saBoxes}
+              {selectedDotw}
+              {callingTable(selectedDotw)}
           </Box> 
           </Grid>
         </div>
@@ -179,7 +194,7 @@ export default function Circle() {
 
           <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
 
-          {/*weekdays　本当はここも共通化したらスマートになるが、今はまだ共通化しない方が可読性が高いと判断*/}
+          {/*weekdays　共通化しない方が可読性が高いと判断*/}
           <Box w="100%" border="1px" onClick={()=>modeChange("月")} _hover={{ bg: "gray.500" }} >
             月
             {moBoxes}
@@ -204,7 +219,7 @@ export default function Circle() {
             土
             {saBoxes}
           </Box> 
-          <Box w="100%" border="1px" onClick={()=>modeChange("Su")} _hover={{ bg: "gray.500" }} >
+          <Box w="100%" border="1px" onClick={()=>modeChange("日")} _hover={{ bg: "gray.500" }} >
             日
             {suBoxes}
           </Box> 
@@ -233,17 +248,19 @@ export default function Circle() {
 
     function EventBoxInDay(props){
       return(
-        <Box my="1em">
+        <Box my="1em" mx="0.5em">
           <Divider marginBottom="0.5em"/>
 
           {props.eventInfo.start} ～ {props.eventInfo.end}<br />
-          <Text fontSize="0.9em">{props.eventInfo.title}</Text>
-          <Text fontSize="0.6em" textAlign="right">{props.eventInfo.about}</Text>
-          <Text fontSize="0.8em">伝言：<br />{props.eventInfo.editableMessage}</Text>
-
+          <Text fontSize="1.2em">{props.eventInfo.title}</Text>
+          <Text fontSize="0.9em" textAlign="right">{props.eventInfo.about}</Text>
+          <Text fontSize="0.7em">参加方法：{props.eventInfo.howToJoin}</Text>
+          <Text fontSize="0.7em" marginBottom="0.5em">その他：{props.eventInfo.other}</Text>
+          <Text fontSize="1.0em">伝言：<br />{props.eventInfo.editableMessage}</Text>
         </Box>
       )
     }
+
     
     
     
