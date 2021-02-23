@@ -67,8 +67,6 @@ export default function Circle() {
     let [mode,setMode] = useState("week");
     let [selectedDotw,setSelectedDotw] = useState("week");
     const modeChange = (d) => {
-      console.log("modochange")
-      //！　propsを使って曜日指定できるようにする
       if(mode==="week"){
         setMode("daily");
         console.log(d);
@@ -76,6 +74,22 @@ export default function Circle() {
       }
       if(mode==="daily"){
         setMode("week");
+      }
+      if(mode==="createEvent"||"deleteEvent"){
+        setMode("week");
+      }
+    }
+    //editモードへのモードチェンジ。一度編集モードに入ってから追加画面と削除画面を切り替える
+    const editModeStart = (d) =>{
+      setMode("createEvent")
+    }
+    const editModeChange = (d) =>{
+      setMode("createEvent")
+      if(mode==="createEvent"){
+        setMode("deleteEvent");
+      }
+      if(mode==="deleteEvent"){
+        setMode("createEvent");
       }
     }
 
@@ -96,11 +110,46 @@ export default function Circle() {
         return(
           <WeekMainComp />
         );
-      }else{
+      }else if(mode==="daily"){
         return(
           <DayMainComp />
         )
+      }else if(mode==="createEvent"){
+        return(
+          <CreateEventMainComp />
+        )
+      }else{
+        return(
+          <DeleteEventMainComp />
+        )
       }
+    }
+
+    function CreateEventMainComp(props){
+      return(
+        <div class="mainContainer">
+
+            {mode}
+            <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
+            <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+            <Button colorScheme="gray" onClick={editModeChange} size="xs">delete</Button>
+
+        </div>
+      )
+
+    }
+
+    function DeleteEventMainComp(props){
+      return(
+        <div class="mainContainer">
+
+          {mode}
+          <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
+          <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+          <Button colorScheme="gray" onClick={editModeChange} size="xs">create</Button>
+        </div>
+      )
+
     }
     
     function DayMainComp(props){
@@ -193,6 +242,7 @@ export default function Circle() {
           <p>
             {mode}
             <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+            <Button colorScheme="gray" onClick={editModeStart} size="xs">edit</Button>
           </p>
 
           <Grid templateColumns="repeat(7, 1fr)" gap={3} mx="3em" mb="7">
