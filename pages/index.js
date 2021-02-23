@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
 import { useState, ChangeEvent,useRef } from "react";
+import { sha256} from 'js-sha256';
 
 import { ChakraProvider } from "@chakra-ui/react";
 
@@ -59,6 +60,7 @@ export default function Circle() {
         response.json().then(result => {
           setDbData(result.data.events);
           console.log(result.data)
+          console.log(sha256(`ハッピーシンセサイザ`))
         })
       })
     }
