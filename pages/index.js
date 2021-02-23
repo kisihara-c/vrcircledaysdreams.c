@@ -5,11 +5,11 @@ import Head from 'next/head';
 import { useState, ChangeEvent,useRef } from "react";
 
 import { ChakraProvider } from "@chakra-ui/react";
+
+import { Spinner } from "@chakra-ui/react"
 import { Button, ButtonGroup } from "@chakra-ui/react"
 import { Grid, GridItem } from "@chakra-ui/react"
 import { Box } from "@chakra-ui/react"
-import { Container } from "@chakra-ui/react"
-import { Spinner } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { Divider } from "@chakra-ui/react"
 
@@ -71,12 +71,15 @@ export default function Circle() {
         setMode("daily");
         console.log(d);
         setSelectedDotw(d);
+        return;
       }
       if(mode==="daily"){
         setMode("week");
+        return;
       }
       if(mode==="createEvent"||"deleteEvent"){
         setMode("week");
+        return;
       }
     }
     //editモードへのモードチェンジ。一度編集モードに入ってから追加画面と削除画面を切り替える
@@ -103,8 +106,6 @@ export default function Circle() {
       fetchJSON();
       return(<Spinner color="gray.500" />);
     }else{
-      //各曜日の配列作成
-
       //各モード判定・表示
       if(mode==="week"){
         return(
@@ -323,8 +324,11 @@ export default function Circle() {
   function Footer(){
     const bgc = useColorModeValue("white", "black")
     return(
-        <Box w="100%" h="7" bg={bgc} position="fixed" bottom={0} textAlign="right">V R C i r c l e D a y s D r e a m s . c　　　</Box>
-
+      
+      
+        <Box w="100%" h="7" bg={bgc} position="fixed" bottom={0} textAlign="right">
+        <p>V R C i r c l e D a y s D r e a m s . c　　　</p></Box>
+      
     )
   }
 

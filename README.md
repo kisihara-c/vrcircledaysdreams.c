@@ -9,6 +9,8 @@ This is not an OSS.I make this product public in order to study.You should not u
 
 研究用に公開しております。いわゆるOSSではなく、無許可で一部または全部の使用はご遠慮下さい（スタンダードなアプリなので、特に流用したい箇所はないと思いますが）。
 
+Also,using https://github.com/codrops/CSSGlitchEffect/
+
 ### Populate body property
 
 Without the use of the body-parser package `req.body` will return undefined. To get express to populate `req.body` you need to install the body parser package and call the package within server.js.
