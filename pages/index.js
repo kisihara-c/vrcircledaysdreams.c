@@ -13,6 +13,7 @@ import { Grid, GridItem } from "@chakra-ui/react"
 import { Box } from "@chakra-ui/react"
 import { Text } from "@chakra-ui/react"
 import { Divider } from "@chakra-ui/react"
+import { Input } from "@chakra-ui/react"
 
 import { ColorModeScript } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
@@ -60,7 +61,6 @@ export default function Circle() {
         response.json().then(result => {
           setDbData(result.data.events);
           console.log(result.data)
-          console.log(sha256(`ハッピーシンセサイザ`))
         })
       })
     }
@@ -91,10 +91,16 @@ export default function Circle() {
     const editModeChange = (d) =>{
       setMode("createEvent")
       if(mode==="createEvent"){
+        setMode("editMessage");
+        return;
+      }
+      if(mode==="editMessage"){
         setMode("deleteEvent");
+        return;
       }
       if(mode==="deleteEvent"){
         setMode("createEvent");
+        return;
       }
     }
 
@@ -121,6 +127,10 @@ export default function Circle() {
         return(
           <CreateEventMainComp />
         )
+      }else if(mode==="editMessage"){
+        return(
+          <EditMessageMainComp />
+        )
       }else{
         return(
           <DeleteEventMainComp />
@@ -129,20 +139,100 @@ export default function Circle() {
     }
 
     function CreateEventMainComp(props){
+      //各変数セット
+      const [title, setTitle] = React.useState("")
+      const handleTitle = (event) => setTitle(event.target.value)
+      const [about, setAbout] = React.useState("")
+      const handleAbout = (event) => setAbout(event.target.value)
+      const [dotw, setDotw] = React.useState("")
+      const handleDotw = (event) => setDotw(event.target.value)
+      const [start, setStart] = React.useState("")
+      const handleStart = (event) => setStart(event.target.value)
+      const [end, setEnd] = React.useState("")
+      const handleEnd = (event) => setEnd(event.target.value)
+      const [howToJoin, setHowToJoin] = React.useState("")
+      const handleHowToJoin = (event) => setHowToJoin(event.target.value)
+      const [other, setOther] = React.useState("")
+      const handleOther = (event) => setOther(event.target.value)
+      //const [link, setLink] = React.useState("")　そのうちの追加機能なのでコメントアウト
+      //const handleLink = (event) => setLink(event.target.value)
+      const [editableMessage, setEditableMessage] = React.useState("")
+      const handleEditableMessage = (event) => setEditableMessage(event.target.value)
+      const [password, setPassword] = React.useState("")
+      const handlePassword = (event) => setPassword(event.target.value)
+
+      //送信、sha256適用
+
       return(
         <div class="mainContainer">
 
             {mode}
             <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
             <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
-            <Button colorScheme="gray" onClick={editModeChange} size="xs">delete</Button>
+            <Button colorScheme="gray" onClick={editModeChange} size="xs">message</Button>
+
+            <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
+              <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
+              <Input placeholder="説明文" size="sm" variant="flushed" value={about} onChange={handleAbout} />
+              <Input placeholder="曜日" size="sm" variant="flushed" value={dotw} onChange={handleDotw} />
+              <Input placeholder="開始時刻（00:00形式にて）" size="sm" variant="flushed" value={start} onChange={handleStart} />
+              <Input placeholder="終了時刻（00:00形式にて）" size="sm" variant="flushed" value={end} onChange={handleEnd} />
+              <Input placeholder="参加方法" size="sm" variant="flushed" value={howToJoin} onChange={handleHowToJoin} />
+              <Input placeholder="その他" size="sm" variant="flushed" value={other} onChange={handleOther} />
+              <Input placeholder="伝言（編集可能な文章）の初期値" size="sm" variant="flushed" value={editableMessage} onChange={handleEditableMessage} />
+              <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
+              <Button colorScheme="gray" size="xs">create!</Button>
+            </Grid>
 
         </div>
       )
 
     }
 
+    function EditMessageMainComp(props){
+      const [title, setTitle] = React.useState("")
+      const handleTitle = (event) => setTitle(event.target.value)
+      const [editableMessage, setEditableMessage] = React.useState("")
+      const handleEditableMessage = (event) => setEditableMessage(event.target.value)
+      const [password, setPassword] = React.useState("")
+      const handlePassword = (event) => setPassword(event.target.value)
+
+      //送信、sha256適用
+
+      return(
+        <div class="mainContainer">
+
+          {mode}
+          <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
+          <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
+          <Button colorScheme="gray" onClick={editModeChange} size="xs">delete</Button>
+
+          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
+            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
+            <Input placeholder="伝言" size="sm" variant="flushed" value={editableMessage} onChange={handleEditableMessage} />
+            <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
+            <Button colorScheme="gray" size="xs">message</Button>
+            xyz
+          </Grid>
+
+
+
+        </div>
+
+
+      )
+
+    }
+
     function DeleteEventMainComp(props){
+      const [title, setTitle] = React.useState("")
+      const handleTitle = (event) => setTitle(event.target.value)
+      const [password, setPassword] = React.useState("")
+      const handlePassword = (event) => setPassword(event.target.value)
+
+      //送信、sha256適用
+
+
       return(
         <div class="mainContainer">
 
@@ -150,6 +240,12 @@ export default function Circle() {
           <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
           <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
           <Button colorScheme="gray" onClick={editModeChange} size="xs">create</Button>
+
+          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
+            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
+            <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
+            <Button colorScheme="gray" size="xs">delete...</Button>
+          </Grid>
         </div>
       )
 
