@@ -162,6 +162,48 @@ export default function Circle() {
       const handlePassword = (event) => setPassword(event.target.value)
 
       //送信、sha256適用
+      let [dbData,setDbData] = useState("");
+      const submitEvent = () =>{
+        if(title==="" || dotw==="" || start==="" || password ===""){
+          console.log("brank");
+          return;
+        }
+        let queryString = 
+        'mutation {insert_events(objects: [{title: "' + title +
+        '"about:"' + about +
+        '"dotw:"' + dotw +
+        '"start:"' + start +
+        '"end:"' + end +
+        '"howToJoin:"' + howToJoin + 
+        '"other:"' + other +
+        '"link:"temp"' +
+        'editableMessage:"' + editableMessage +
+        '"password:"' + sha256(password) + '"}]) {returning {id}}}';
+        let query = { query: queryString };
+        
+        fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
+          method: 'POST',
+          body: JSON.stringify(query),
+          headers: {
+            'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+          }
+        }).then(response => {
+          response.json().then(result => {
+            setDbData(result.data.events);
+            console.log(result.data)
+          }).catch((error) => {
+            console.error('Error:', error);
+          });
+        }).catch((error) => {
+          console.error('Error:', error);
+        });
+
+        console.log(queryString);
+
+        //全消去
+        setTitle("");setAbout("");setDotw("");setStart("");setEnd("");
+        setHowToJoin("");setOther("");setEditableMessage("");setPassword("");
+      }
 
       return(
         <div class="mainContainer">
@@ -172,16 +214,16 @@ export default function Circle() {
             <Button colorScheme="gray" onClick={editModeChange} size="xs">message</Button>
 
             <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
-              <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
+              <Input placeholder="イベントタイトル（必須）" size="sm" variant="flushed" value={title} onChange={handleTitle} />
               <Input placeholder="説明文" size="sm" variant="flushed" value={about} onChange={handleAbout} />
-              <Input placeholder="曜日" size="sm" variant="flushed" value={dotw} onChange={handleDotw} />
-              <Input placeholder="開始時刻（00:00形式にて）" size="sm" variant="flushed" value={start} onChange={handleStart} />
+              <Input placeholder="曜日（必須）" size="sm" variant="flushed" value={dotw} onChange={handleDotw} />
+              <Input placeholder="開始時刻（00:00形式にて、必須）" size="sm" variant="flushed" value={start} onChange={handleStart} />
               <Input placeholder="終了時刻（00:00形式にて）" size="sm" variant="flushed" value={end} onChange={handleEnd} />
               <Input placeholder="参加方法" size="sm" variant="flushed" value={howToJoin} onChange={handleHowToJoin} />
               <Input placeholder="その他" size="sm" variant="flushed" value={other} onChange={handleOther} />
               <Input placeholder="伝言（編集可能な文章）の初期値" size="sm" variant="flushed" value={editableMessage} onChange={handleEditableMessage} />
-              <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
-              <Button colorScheme="gray" size="xs">create!</Button>
+              <Input placeholder="編集・削除パスワード（必須）" size="sm" variant="flushed" value={password} onChange={handlePassword} />
+              <Button colorScheme="gray" size="xs" onClick={submitEvent}>create!</Button>
             </Grid>
 
         </div>
@@ -190,14 +232,44 @@ export default function Circle() {
     }
 
     function EditMessageMainComp(props){
-      const [title, setTitle] = React.useState("")
-      const handleTitle = (event) => setTitle(event.target.value)
-      const [editableMessage, setEditableMessage] = React.useState("")
-      const handleEditableMessage = (event) => setEditableMessage(event.target.value)
-      const [password, setPassword] = React.useState("")
-      const handlePassword = (event) => setPassword(event.target.value)
+      const [title, setTitle] = React.useState("");
+      const handleTitle = (event) => setTitle(event.target.value);
+      const [editableMessage, setEditableMessage] = React.useState("");
+      const handleEditableMessage = (event) => setEditableMessage(event.target.value);
+      const [password, setPassword] = React.useState("");
+      const handlePassword = (event) => setPassword(event.target.value);
 
       //送信、sha256適用
+      let [dbData,setDbData] = useState("");
+      const submitMessage = () =>{
+        let queryString = 
+        'mutation update_events {update_events(' +
+        'where: {password:{_eq:"' + sha256(password) + '"}},' +
+        '_set: {editableMessage:"' + editableMessage + '"}) {affected_rows returning {id}}}'
+        let query = { query: queryString };
+        
+        fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
+          method: 'POST',
+          body: JSON.stringify(query),
+          headers: {
+            'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+          }
+        }).then(response => {
+          response.json().then(result => {
+            setDbData(result.data.events);
+            console.log(result.data)
+          }).catch((error) => {
+            console.error('Error:', error);
+          });
+        }).catch((error) => {
+          console.error('Error:', error);
+        });
+
+        console.log(queryString);
+
+        //全消去
+        setTitle("");setEditableMessage("");setPassword("");
+      }
 
       return(
         <div class="mainContainer">
@@ -208,10 +280,12 @@ export default function Circle() {
           <Button colorScheme="gray" onClick={editModeChange} size="xs">delete</Button>
 
           <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
-            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
+            
+            {/*今はないままでOK、人が増えすぎなければ困らない
+            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />*/}
             <Input placeholder="伝言" size="sm" variant="flushed" value={editableMessage} onChange={handleEditableMessage} />
             <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
-            <Button colorScheme="gray" size="xs">message</Button>
+            <Button colorScheme="gray" size="xs" onClick={submitMessage}>message</Button>
             xyz
           </Grid>
 
@@ -231,6 +305,35 @@ export default function Circle() {
       const handlePassword = (event) => setPassword(event.target.value)
 
       //送信、sha256適用
+      let [dbData,setDbData] = useState("");
+      const submitDelete = () =>{
+        let queryString = 
+        'mutation {delete_events(where: {password: {_eq:"' + password + 
+        '"}}) {affected_rows returning {id}}}'
+        let query = { query: queryString };
+        
+        fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
+          method: 'POST',
+          body: JSON.stringify(query),
+          headers: {
+            'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+          }
+        }).then(response => {
+          response.json().then(result => {
+            setDbData(result.data.events);
+            console.log(result.data)
+          }).catch((error) => {
+            console.error('Error:', error);
+          });
+        }).catch((error) => {
+          console.error('Error:', error);
+        });
+
+        console.log(queryString);
+
+        //全消去
+        setPassword("");
+      }
 
 
       return(
@@ -242,9 +345,10 @@ export default function Circle() {
           <Button colorScheme="gray" onClick={editModeChange} size="xs">create</Button>
 
           <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
-            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
+            {/*予定変更の可能性あるも今は省略
+            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />*/}
             <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
-            <Button colorScheme="gray" size="xs">delete...</Button>
+            <Button colorScheme="gray" size="xs" onClick={submitDelete}>delete...</Button>
           </Grid>
         </div>
       )
