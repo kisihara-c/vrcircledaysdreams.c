@@ -51,7 +51,10 @@ export default function Circle() {
     const fetchJSON = (q=query) => {
       fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
         method: 'POST',
-        body: JSON.stringify(q)
+        body: JSON.stringify(q),
+        headers: {
+          'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+        }
       }).then(response => {
         response.json().then(result => {
           setDbData(result.data.events);
@@ -148,7 +151,7 @@ export default function Circle() {
             <Button colorScheme="gray" onClick={modeChange} size="xs">Back</Button>
             <Button colorScheme="gray" onClick={toggleColorMode} size="xs">timePassing</Button>
           </p>
-          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="19em" mb="7">
+          <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="12%" mb="7">
             <Box w="100%" border="1px">
               {selectedDotw}
               {callingTable(selectedDotw)}
