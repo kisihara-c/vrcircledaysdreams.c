@@ -67,8 +67,9 @@ export default function Circle() {
 
     //モード管理　増やすこともできる
     let [mode,setMode] = useState("week");
-    let [selectedDotw,setSelectedDotw] = useState("week");
+    let [selectedDotw,setSelectedDotw] = useState("");
     const modeChange = (d) => {
+      //week,deilyは相互切り替え
       if(mode==="week"){
         setMode("daily");
         console.log(d);
@@ -79,7 +80,8 @@ export default function Circle() {
         setMode("week");
         return;
       }
-      if(mode==="createEvent"||"deleteEvent"){
+      //設定画面時は週別画面へ戻る
+      if(mode==="createEvent"||mode==="editMessage"||mode==="deleteEvent"){
         setMode("week");
         return;
       }
@@ -88,8 +90,8 @@ export default function Circle() {
     const editModeStart = (d) =>{
       setMode("createEvent")
     }
+    //追加・編集・削除の相互切り替え
     const editModeChange = (d) =>{
-      setMode("createEvent")
       if(mode==="createEvent"){
         setMode("editMessage");
         return;
@@ -216,9 +218,9 @@ export default function Circle() {
             <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
               <Input placeholder="イベントタイトル（必須）" size="sm" variant="flushed" value={title} onChange={handleTitle} />
               <Input placeholder="説明文" size="sm" variant="flushed" value={about} onChange={handleAbout} />
-              <Input placeholder="曜日（必須）" size="sm" variant="flushed" value={dotw} onChange={handleDotw} />
+              <Input placeholder="曜日（月or火or水or木or金or土or日の一文字にて必須）" size="sm" variant="flushed" value={dotw} onChange={handleDotw} />
               <Input placeholder="開始時刻（00:00形式にて、必須）" size="sm" variant="flushed" value={start} onChange={handleStart} />
-              <Input placeholder="終了時刻（00:00形式にて）" size="sm" variant="flushed" value={end} onChange={handleEnd} />
+              <Input placeholder="終了時刻（00:00形式にて　省略可）" size="sm" variant="flushed" value={end} onChange={handleEnd} />
               <Input placeholder="参加方法" size="sm" variant="flushed" value={howToJoin} onChange={handleHowToJoin} />
               <Input placeholder="その他" size="sm" variant="flushed" value={other} onChange={handleOther} />
               <Input placeholder="伝言（編集可能な文章）の初期値" size="sm" variant="flushed" value={editableMessage} onChange={handleEditableMessage} />
@@ -356,6 +358,7 @@ export default function Circle() {
     }
     
     function DayMainComp(props){
+      //各データ配列作成
       let moData = dbData.filter(function(value,index,array){return value.dotw==="月"})
       let tuData = dbData.filter(function(value,index,array){return value.dotw==="火"})
       let weData = dbData.filter(function(value,index,array){return value.dotw==="水"})
@@ -396,7 +399,6 @@ export default function Circle() {
       }
 
       return(
-        < >
         <div class="mainContainer">
           <p>
             {mode}
@@ -410,7 +412,6 @@ export default function Circle() {
           </Box> 
           </Grid>
         </div>
-        </>
         )
     }
 
