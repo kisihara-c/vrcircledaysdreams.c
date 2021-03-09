@@ -48,14 +48,14 @@ export default function Circle() {
     let [dbData,setDbData] = useState("");
     let query = 
       { query: 
-        "query MyQuery { events(order_by: {start: asc}) { title about dotw start end howToJoin other link editableMessage password } }" }
+        "query MyQuery { events(order_by: {start: asc}) { title about dotw start end howToJoin other link editableMessage } }" }
 
     const fetchJSON = (q=query) => {
       fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
         method: 'POST',
         body: JSON.stringify(q),
         headers: {
-          'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+          'HASURA_GRAPHQL_UNAUTHORIZED_ROLE': true
         }
       }).then(response => {
         response.json().then(result => {
@@ -187,7 +187,7 @@ export default function Circle() {
           method: 'POST',
           body: JSON.stringify(query),
           headers: {
-            'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+            'HASURA_GRAPHQL_UNAUTHORIZED_ROLE': true
           }
         }).then(response => {
           response.json().then(result => {
@@ -254,7 +254,7 @@ export default function Circle() {
           method: 'POST',
           body: JSON.stringify(query),
           headers: {
-            'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+            'HASURA_GRAPHQL_UNAUTHORIZED_ROLE': true
           }
         }).then(response => {
           response.json().then(result => {
@@ -318,7 +318,7 @@ export default function Circle() {
           method: 'POST',
           body: JSON.stringify(query),
           headers: {
-            'x-hasura-admin-secret': "dd71b7b0ce49c75e1b17f0351616a244ef89fdf52d488c3b10d5de6560387b68"
+            'HASURA_GRAPHQL_UNAUTHORIZED_ROLE': true
           }
         }).then(response => {
           response.json().then(result => {
