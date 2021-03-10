@@ -246,7 +246,7 @@ export default function Circle() {
       const submitMessage = () =>{
         let queryString = 
         'mutation update_events {update_events(' +
-        'where: {password:{_eq:"' + sha256(password) + '"}},' +
+        'where: {_and: {password:{_eq:"' + sha256(password) + '"},title:{_eq:"' + title + '"}}},' +
         '_set: {editableMessage:"' + editableMessage + '"}) {affected_rows returning {id}}}'
         let query = { query: queryString };
         
@@ -283,8 +283,7 @@ export default function Circle() {
 
           <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
             
-            {/*今はないままでOK、人が増えすぎなければ困らない
-            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />*/}
+            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
             <Input placeholder="伝言" size="sm" variant="flushed" value={editableMessage} onChange={handleEditableMessage} />
             <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
             <Button colorScheme="gray" size="xs" onClick={submitMessage}>message</Button>
@@ -310,8 +309,8 @@ export default function Circle() {
       let [dbData,setDbData] = useState("");
       const submitDelete = () =>{
         let queryString = 
-        'mutation {delete_events(where: {password: {_eq:"' + password + 
-        '"}}) {affected_rows returning {id}}}'
+        'mutation {delete_events(where: {_and:{password: {_eq:"' + sha256(password) + 
+        '"},title:{_eq:"' + title + '"}}}) {affected_rows returning {id}}}'
         let query = { query: queryString };
         
         fetch('https://vrcdaysdreams-hc.hasura.app/v1/graphql', {
@@ -347,8 +346,7 @@ export default function Circle() {
           <Button colorScheme="gray" onClick={editModeChange} size="xs">create</Button>
 
           <Grid templateColumns="repeat(1, 1fr)" gap={3} mx="15%" mb="7">
-            {/*予定変更の可能性あるも今は省略
-            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />*/}
+            <Input placeholder="イベントタイトル" size="sm" variant="flushed" value={title} onChange={handleTitle} />
             <Input placeholder="編集・削除パスワード" size="sm" variant="flushed" value={password} onChange={handlePassword} />
             <Button colorScheme="gray" size="xs" onClick={submitDelete}>delete...</Button>
           </Grid>
